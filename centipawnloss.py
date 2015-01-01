@@ -12,13 +12,20 @@ scores = []
 evalstring = ""
 recording = False
 
+def evalstring2int(es): # Turns evalstring into an integer
+    digits = ""
+    for char in es:
+        if char in "1234567890":
+            digits += char
+    return(int(digits))
+
 for char in pgn:
     if recording:
         if char in "1234567890.-+":
             evalstring += char
         else:
             recording = False
-            scores.append(float(evalstring))
+            scores.append(evalstring2int(evalstring))
             evalstring = ""
     else:
         if char == "{":
@@ -45,9 +52,9 @@ for score in scores:
     white = not white
     lastscore = score
 
-avgwl = sum(whiteloss) / len(whiteloss)
-avgbl = sum(blackloss) / len(blackloss)
+avgwl = round(sum(whiteloss) / len(whiteloss))
+avgbl = round(sum(blackloss) / len(blackloss))
 
 # Finally we print the results
-print("White Average Centipawn Loss: ", int(avgwl * 100))
-print("Black Average Centipawn Loss: ", int(avgbl * 100))
+print("White Average Centipawn Loss: ", avgwl)
+print("Black Average Centipawn Loss: ", avgbl)

@@ -1,6 +1,6 @@
 # First we need to get the pgn file.
-pgnname = input("Analyze which file? ")
-pgnfile = open(pgnname, 'r')
+import sys
+pgnfile = open(sys.argv[1], 'r')
 pgn = pgnfile.read()
 
 # Next we need to parse the pgn file for the evaluation scores.  The

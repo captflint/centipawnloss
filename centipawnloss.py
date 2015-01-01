@@ -15,7 +15,7 @@ recording = False
 def evalstring2int(es): # Turns evalstring into an integer
     digits = ""
     for char in es:
-        if char in "1234567890":
+        if char in "1234567890-":
             digits += char
     return(int(digits))
 

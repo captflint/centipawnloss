@@ -45,14 +45,8 @@ for score in scores:
     white = not white
     lastscore = score
 
-if len(whiteloss) != 0:
-    avgwl = sum(whiteloss) / len(whiteloss)
-else:
-    avgwl = 0
-if len(blackloss) != 0:
-    avgbl = sum(blackloss) / len(blackloss)
-else:
-    avgbl = 0
+avgwl = sum(whiteloss) / len(whiteloss)
+avgbl = sum(blackloss) / len(blackloss)
 
 # Finally we print the results
 print("White Average Centipawn Loss: ", int(avgwl * 100))

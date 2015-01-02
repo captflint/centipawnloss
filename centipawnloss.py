@@ -8,10 +8,6 @@ pgn = pgnfile.read()
 # the program Scid vs PC which encloses evaluation scores in curly
 # brackets.  The variation should be stripped to ensure proper
 # parsing.
-scores = []
-evalstring = ""
-recording = False
-
 def evalstring2int(es): # Turns evalstring into an integer
     digits = ""
     for char in es:
@@ -19,42 +15,52 @@ def evalstring2int(es): # Turns evalstring into an integer
             digits += char
     return(int(digits))
 
-for char in pgn:
-    if recording:
-        if char in "1234567890.-+":
-            evalstring += char
+def getevals(game):
+    scores = []
+    evalstring = ""
+    recording = False
+    for char in pgn:
+        if recording:
+            if char in "1234567890.-+\n":
+                evalstring += char
+            else:
+                recording = False
+                scores.append(evalstring2int(evalstring))
+                evalstring = ""
         else:
-            recording = False
-            scores.append(evalstring2int(evalstring))
-            evalstring = ""
-    else:
-        if char == "{":
-            recording = True
+            if char == "{":
+                recording = True
+    return(scores)
 
 # Now we do the actual math.
-whiteloss = []
-blackloss = []
-white = True
-lastscore = 0
-for score in scores:
-    if white:
-        loss = lastscore - score
-        if loss > 0:
-            whiteloss.append(loss)
+def calcacl(evals):
+    whiteloss = []
+    blackloss = []
+    white = True
+    lastscore = 0
+    for score in evals:
+        if white:
+            loss = lastscore - score
+            if loss > 0:
+                whiteloss.append(loss)
+            else:
+                whiteloss.append(0)
         else:
-            whiteloss.append(0)
-    else:
-        loss = (lastscore - score) * -1
-        if loss > 0:
-            blackloss.append(loss)
-        else:
-            blackloss.append(0)
-    white = not white
-    lastscore = score
+            loss = (lastscore - score) * -1
+            if loss > 0:
+                blackloss.append(loss)
+            else:
+                blackloss.append(0)
+        white = not white
+        lastscore = score
 
-avgwl = round(sum(whiteloss) / len(whiteloss))
-avgbl = round(sum(blackloss) / len(blackloss))
+    avgwl = round(sum(whiteloss) / len(whiteloss))
+    avgbl = round(sum(blackloss) / len(blackloss))
+    return((avgwl, avgbl))
 
-# Finally we print the results
-print("White Average Centipawn Loss: ", avgwl)
-print("Black Average Centipawn Loss: ", avgbl)
+acl = calcacl(getevals(pgn))
+wacl = acl[0]
+bacl = acl[1]
+print("Average Centipawn Loss")
+print("White: ", wacl)
+print("Black: ", bacl)

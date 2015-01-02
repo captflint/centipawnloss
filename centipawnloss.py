@@ -122,13 +122,28 @@ def gettag(taglist, tag):
             return(entry[1])
     return("Tag not found")
 
-test = gamespliter(pgn)
-games = []
-for game in test:
-    games.append(parsepgntags(game))
-for game in games:
-    print(gettag(game, "Round"))
-    print(gettag(game, "White"))
-    print(gettag(game, "Black"))
-    print(gettag(game, "Result"))
-    print("\n")
+players = []
+def playeracl(player, acl):
+    global players
+    for entry in players:
+        if entry[0] == player:
+            entry[1].append(acl)
+            return()
+    players.append([player, [acl]])
+    return()
+
+def processgame(game):
+    gametags = parsepgntags(game)
+    gameevals = getevals(game)
+    gameacl = calcacl(gameevals)
+    whiteacl = gameacl[0]
+    blackacl = gameacl[1]
+    playeracl(gettag(gametags, "White"), whiteacl)
+    playeracl(gettag(gametags, "Black"), blackacl)
+    return
+
+for game in gamespliter(pgn):
+    processgame(game)
+
+for entry in players:
+    print(entry[0] + ':', round(sum(entry[1]) / len(entry[1])))

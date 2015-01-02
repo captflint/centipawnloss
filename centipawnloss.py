@@ -58,9 +58,28 @@ def calcacl(evals):
     avgbl = round(sum(blackloss) / len(blackloss))
     return((avgwl, avgbl))
 
-acl = calcacl(getevals(pgn))
-wacl = acl[0]
-bacl = acl[1]
-print("Average Centipawn Loss")
-print("White: ", wacl)
-print("Black: ", bacl)
+def gamespliter(pgndata):
+    startingpoints = []
+    point = 0
+    beginstr = '[Event "'
+    while point < len(pgndata):
+        if pgndata[point:point + len(beginstr)] == beginstr:
+            startingpoints.append(point)
+        point += 1
+
+    if len(startingpoints) == 1:
+        return([pgndata])
+    else:
+        games = []
+        counter = 0
+        while counter < len(startingpoints) - 1:
+            games.append(pgndata[startingpoints[counter]:startingpoints[counter + 1]])
+            counter += 1
+        games.append(pgndata[startingpoints[-1]:])
+        return(games)
+
+test = gamespliter(pgn)
+for game in test:
+    print("NEW GAME\n\n\n")
+    print(game)
+print(len(test))

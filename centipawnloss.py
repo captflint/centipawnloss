@@ -116,13 +116,19 @@ def parsepgntags(game):
 
     return(tags)
 
+def gettag(taglist, tag):
+    for entry in taglist:
+        if entry[0] == tag:
+            return(entry[1])
+    return("Tag not found")
+
 test = gamespliter(pgn)
-gametags = []
+games = []
 for game in test:
-    gametags.append(parsepgntags(game))
-
-for taglist in gametags:
-    for tagpair in taglist:
-        print(tagpair[0] + ': ' + tagpair[1])
-    print('\n\n')
-
+    games.append(parsepgntags(game))
+for game in games:
+    print(gettag(game, "Round"))
+    print(gettag(game, "White"))
+    print(gettag(game, "Black"))
+    print(gettag(game, "Result"))
+    print("\n")

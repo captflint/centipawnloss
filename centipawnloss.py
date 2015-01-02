@@ -78,8 +78,51 @@ def gamespliter(pgndata):
         games.append(pgndata[startingpoints[-1]:])
         return(games)
 
+def parsepgntags(game):
+    rawtags = []
+    rawtag = ""
+    intag = False
+    for char in game:
+        if intag:
+            if char == ']':
+                rawtags.append(rawtag)
+                rawtag = ""
+                intag = False
+            else:
+                rawtag += char
+        else:
+            if char == '[':
+                intag = True
+
+    tags = []
+    for entry in rawtags:
+        stage = 0
+        tag = ""
+        data = ""
+        for char in entry:
+            if stage == 0:
+                if char != " ":
+                    tag += char
+                else:
+                    stage += 1
+            elif stage == 1:
+                if char == '"':
+                    stage += 1
+            elif stage == 2:
+                if char != '"':
+                    data += char
+                else:
+                    tags.append((tag, data))
+
+    return(tags)
+
 test = gamespliter(pgn)
+gametags = []
 for game in test:
-    print("NEW GAME\n\n\n")
-    print(game)
-print(len(test))
+    gametags.append(parsepgntags(game))
+
+for taglist in gametags:
+    for tagpair in taglist:
+        print(tagpair[0] + ': ' + tagpair[1])
+    print('\n\n')
+

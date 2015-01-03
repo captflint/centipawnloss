@@ -19,7 +19,7 @@ def getevals(game):
     scores = []
     evalstring = ""
     recording = False
-    for char in pgn:
+    for char in game:
         if recording:
             if char in "1234567890.-+\n":
                 evalstring += char
@@ -144,6 +144,19 @@ def processgame(game):
 
 for game in gamespliter(pgn):
     processgame(game)
+    acls = calcacl(getevals(game))
+    whiteacl = acls[0]
+    blackacl = acls[1]
+    tags = parsepgntags(game)
+    print("Round:", gettag(tags, "Round"))
+    print("White:", gettag(tags, "White"))
+    print("Black:", gettag(tags, "Black"))
+    print("Result:", gettag(tags, "Result"))
+    print("Average Centipawn Loss (ACL)")
+    print("White ACL:", whiteacl)
+    print("Black ACL:", blackacl)
+    print("\n")
 
+print("Normal centipawn loss accross all game in file")
 for entry in players:
-    print(entry[0] + ':', round(sum(entry[1]) / len(entry[1])))
+    print(entry[0] + ' -', round(sum(entry[1]) / len(entry[1])))

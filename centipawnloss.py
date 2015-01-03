@@ -157,6 +157,6 @@ for game in gamespliter(pgn):
     print("Black ACL:", blackacl)
     print("\n")
 
-print("Normal centipawn loss accross all game in file")
+print("Normal centipawn loss accross all games in file")
 for entry in players:
-    print(entry[0] + ' -', round(sum(entry[1]) / len(entry[1])))
+    print('"' + entry[0] + '", ', round(sum(entry[1]) / len(entry[1])))
